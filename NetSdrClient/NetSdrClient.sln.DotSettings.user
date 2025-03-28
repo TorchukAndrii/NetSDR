@@ -3,5 +3,6 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::E1D55665-5B41-45D6-8150-5A85074F26B8::net8.0::NetSdtClient.Tests.UdpReceiverTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::E1D55665-5B41-45D6-8150-5A85074F26B8::net8.0::NetSdtClient.Tests.TcpCommunicationClientTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E1D55665-5B41-45D6-8150-5A85074F26B8::net8.0::NetSdtClient.Tests.NetSdrClientTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
