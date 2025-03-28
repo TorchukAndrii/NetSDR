@@ -68,15 +68,16 @@ public class TcpCommunicationClient : ITcpCommunicationClient
 
     public async Task SendAsync(byte[] data)
     {
-        if (_stream == null || !_stream.CanWrite)
-            throw new TcpCommunicationException("Not connected");
+        EnsureConnected();
 
-        await _stream.WriteAsync(data);
+        await _stream!.WriteAsync(data);
     }
 
 
     public async Task<byte[]> ReceiveAsync()
     {
+        EnsureConnected();
+        
         var headerBytes = await ReadAsync(_stream!, HeaderSize);
         var header = MessageHeader.FromBytes(headerBytes);
         int payloadLength = header.Length - HeaderSize;
@@ -107,5 +108,10 @@ public class TcpCommunicationClient : ITcpCommunicationClient
         }
 
         return buffer;
+    }
+    private void EnsureConnected()
+    {
+        if (IsConnected || _stream == null || !_stream.CanWrite)
+            throw new TcpCommunicationException("Client is not connected.");
     }
 }

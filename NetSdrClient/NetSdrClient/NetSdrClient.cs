@@ -41,8 +41,6 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     public async Task StartReceivingIQAsync(string filePath = "IQData.bin")
     {
-        EnsureConnected();
-
         byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
         await _tcpCommunicationClient.SendAsync(command);
 
@@ -54,8 +52,6 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     public async Task StopReceivingIQAsync()
     {
-        EnsureConnected();
-
         byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
         await _tcpCommunicationClient.SendAsync(command);
 
@@ -68,8 +64,6 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     public async Task SetFrequencyAsync(ulong frequency, byte channelId)
     {
-        EnsureConnected();
-
         byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
         await _tcpCommunicationClient.SendAsync(command);
 
@@ -77,9 +71,5 @@ public class NetSdrClient : INetSdrClient, IDisposable
         // ProcessResponse(response); // TODO
     }
 
-    private void EnsureConnected()
-    {
-        if (!_tcpCommunicationClient.IsConnected)
-            throw new TcpCommunicationException("Client is not connected.");
-    }
+
 }
