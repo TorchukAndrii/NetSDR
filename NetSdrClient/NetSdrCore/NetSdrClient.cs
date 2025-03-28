@@ -3,6 +3,7 @@ using NetSdrCore.Enums;
 using NetSdrCore.CommandConfigurators;
 using NetSdrCore.Contracts;
 using NetSdrCore.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace NetSdrCore;
 
@@ -10,11 +11,16 @@ public class NetSdrClient : INetSdrClient, IDisposable
 {
     private readonly ITcpCommunicationClient _tcpCommunicationClient;
     private readonly IUdpReceiver _udpReceiver;
+    private readonly ILogger<NetSdrClient> _logger;
 
-    public NetSdrClient(ITcpCommunicationClient tcpCommunicationClient, IUdpReceiver udpReceiver)
+    public NetSdrClient(
+        ITcpCommunicationClient tcpCommunicationClient, 
+        IUdpReceiver udpReceiver,
+        ILogger<NetSdrClient> logger)
     {
         _udpReceiver = udpReceiver;
         _tcpCommunicationClient = tcpCommunicationClient;
+        _logger = logger;
     }
 
     public void Dispose()
@@ -28,9 +34,11 @@ public class NetSdrClient : INetSdrClient, IDisposable
         if (IPAddress.TryParse(ip, out var address))
         {
             await _tcpCommunicationClient.ConnectAsync(address, port);
+            _logger.LogInformation("Connected to {Ip}:{Port}.", ip, port);
             return;
         }
 
+        _logger.LogError("Invalid IP address: {Ip}", ip);
         throw new ArgumentException("Invalid IP address.");
     }
 
@@ -42,58 +50,82 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     public async Task StartReceivingIQAsync(string filePath = "IQData.bin")
     {
-        byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
-        await _tcpCommunicationClient.SendAsync(command);
+        try
+        {
+            byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
+            await _tcpCommunicationClient.SendAsync(command);
 
-        var response = await _tcpCommunicationClient.ReceiveAsync();
-        ProcessResponse(response);
+            var response = await _tcpCommunicationClient.ReceiveAsync();
+            ProcessResponse(response);
 
-        _udpReceiver.StartReceiving(filePath);
+            _udpReceiver.StartReceiving(filePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while starting IQ data reception.");
+            throw;
+        }
     }
     
     public async Task StopReceivingIQAsync()
     {
-        byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
-        await _tcpCommunicationClient.SendAsync(command);
-        
-        var response = await _tcpCommunicationClient.ReceiveAsync();
-        ProcessResponse(response);
+        try
+        {
+            byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
+            await _tcpCommunicationClient.SendAsync(command);
 
-        await _udpReceiver.StopReceivingAsync();
+            var response = await _tcpCommunicationClient.ReceiveAsync();
+            ProcessResponse(response);
+
+            await _udpReceiver.StopReceivingAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while stopping IQ data reception.");
+            throw;
+        }
     }
 
     public async Task SetFrequencyAsync(ulong frequency, byte channelId)
     {
-        byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
-        await _tcpCommunicationClient.SendAsync(command);
+        try
+        {
+            byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
+            await _tcpCommunicationClient.SendAsync(command);
 
-        var response = await _tcpCommunicationClient.ReceiveAsync();
-        ProcessResponse(response);
+            var response = await _tcpCommunicationClient.ReceiveAsync();
+            ProcessResponse(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while setting frequency.");
+            throw;
+        }
     }
 
     private void ProcessResponse(byte[] response)
     {
-        if (response == null || response.Length == 0)
+        if (response.Length == 0)
         {
-            Console.WriteLine("Received an empty response from the receiver.");
+            _logger.LogWarning("Received an empty response from the receiver.");
             return; 
         }
-        
+
         if (response.Length == 2 && BitConverter.ToUInt16(response, 0) == (ushort)ResponseType.NAK)
         {
+            _logger.LogError("Received NAK response.");
             throw new NakException();
         }
-        
+
         if (response.Length >= 3 && BitConverter.ToUInt16(response, 0) == (ushort)ResponseType.ACK)
         {
-            Console.WriteLine($"Received ACK for Data Item {response[2]}");
+            _logger.LogInformation("Received ACK for Data Item {DataItem}.", response[2]);
             return;
         }
 
-        // Future support for Unsolicited Control Item messages
         if (response.Length > 4) 
         {
-            Console.WriteLine("Received Unsolicited Control Item - future processing needed");
+            _logger.LogWarning("Received Unsolicited Control Item - future processing needed.");
         }
     }
 }

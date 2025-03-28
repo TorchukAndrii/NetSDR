@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using System.Threading.Channels;
+using Microsoft.Extensions.Logging;
 using NetSdrCore.Contracts;
 
 namespace NetSdrCore;
@@ -7,15 +8,17 @@ namespace NetSdrCore;
 public class UdpReceiver : IUdpReceiver, IDisposable
 {
     private readonly int _port;
+    private readonly ILogger<UdpReceiver> _logger;
     private Task? _backgroundTask;
     private CancellationTokenSource _cts = new();
     private bool _disposed;
     private Channel<byte[]>? _udpChannel;
     private UdpClient? _udpClient;
 
-    public UdpReceiver(int port = 60000)
+    public UdpReceiver(ILogger<UdpReceiver> logger, int port = 60000)
     {
         _port = port;
+        _logger = logger;
     }
 
     public void StartReceiving(string outputFilePath)
@@ -51,7 +54,7 @@ public class UdpReceiver : IUdpReceiver, IDisposable
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine("UDP receiver cancellation requested.");
+            _logger.LogWarning("UDP receiver cancellation requested.");
         }
         finally
         {
@@ -92,11 +95,11 @@ public class UdpReceiver : IUdpReceiver, IDisposable
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine("File writing stopped.");
+            _logger.LogWarning("File writing stopped.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error writing UDP data to file: {ex.Message}");
+            _logger.LogError(ex, "Error writing UDP data to file.");
         }
     }
 
@@ -114,11 +117,11 @@ public class UdpReceiver : IUdpReceiver, IDisposable
         }
         catch (OperationCanceledException)
         {
-            Console.WriteLine("UDP Receiver stopped.");
+            _logger.LogWarning("UDP Receiver stopped.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error receiving UDP data: {ex.Message}");
+            _logger.LogError(ex, "Error receiving UDP data.");
         }
     }
 }

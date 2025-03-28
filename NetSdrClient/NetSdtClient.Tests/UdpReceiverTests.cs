@@ -1,5 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NetSdrCore;
 
 namespace NetSdtCore.Tests;
@@ -21,7 +23,8 @@ public class UdpReceiverTests
         if (File.Exists(TestFilePath))
             File.Delete(TestFilePath);
 
-        using var udpReceiver = new UdpReceiver(testPort);
+        var loggerMock = new Mock<ILogger<UdpReceiver>>();
+        using var udpReceiver = new UdpReceiver(loggerMock.Object, testPort);
         udpReceiver.StartReceiving(TestFilePath);
 
         using var udpClient = new UdpClient();
@@ -46,7 +49,8 @@ public class UdpReceiverTests
         if (File.Exists(TestFilePath))
             File.Delete(TestFilePath);
 
-        using var udpReceiver = new UdpReceiver(testPort);
+        var loggerMock = new Mock<ILogger<UdpReceiver>>();
+        using var udpReceiver = new UdpReceiver(loggerMock.Object, testPort);
         udpReceiver.StartReceiving(TestFilePath);
 
         using var udpClient = new UdpClient();
