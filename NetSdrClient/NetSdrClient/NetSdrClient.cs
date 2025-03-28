@@ -8,7 +8,7 @@ namespace NetSdrClient;
 public class NetSdrClient : INetSdrClient, IDisposable
 {
     private readonly ITcpCommunicationClient _tcpCommunicationClient;
-    private IUdpReceiver _udpReceiver;
+    private readonly IUdpReceiver _udpReceiver;
 
     public NetSdrClient(ITcpCommunicationClient tcpCommunicationClient, IUdpReceiver udpReceiver)
     {
@@ -48,7 +48,7 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
         var response = await _tcpCommunicationClient.ReceiveAsync();
         // ProcessResponse(response); // TODO
-        
+
         _udpReceiver.StartReceiving(filePath);
     }
 
