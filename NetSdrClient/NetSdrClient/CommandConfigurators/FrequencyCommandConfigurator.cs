@@ -4,8 +4,8 @@ namespace NetSdrClient.CommandConfigurators;
 
 public class FrequencyCommandConfigurator : BaseCommandConfigurator
 {
-    private byte _channelId;
     private readonly byte[] _frequencyBytes = new byte[5];
+    private byte _channelId;
 
     public FrequencyCommandConfigurator()
     {

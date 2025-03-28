@@ -1,0 +1,85 @@
+﻿using System.Net;
+using NetSdrClient.CommandConfigurators;
+using NetSdrClient.Contracts;
+using NetSdrClient.Exceptions;
+
+namespace NetSdrClient;
+
+public class NetSdrClient : INetSdrClient, IDisposable
+{
+    private readonly ITcpCommunicationClient _tcpCommunicationClient;
+    private IUdpReceiver _udpReceiver;
+
+    public NetSdrClient(ITcpCommunicationClient tcpCommunicationClient, IUdpReceiver udpReceiver)
+    {
+        _udpReceiver = udpReceiver;
+        _tcpCommunicationClient = tcpCommunicationClient;
+    }
+
+    public void Dispose()
+    {
+        _tcpCommunicationClient.DisconnectAsync();
+        _udpReceiver.Dispose();
+    }
+
+    public async Task ConnectAsync(string ip, int port = 50000)
+    {
+        if (IPAddress.TryParse(ip, out var address))
+        {
+            await _tcpCommunicationClient.ConnectAsync(address, port);
+            return;
+        }
+
+        throw new ArgumentException("Invalid IP address.");
+    }
+
+    public async Task DisconnectAsync()
+    {
+        await _tcpCommunicationClient.DisconnectAsync();
+        await StopReceivingIQAsync();
+    }
+
+    public async Task StartReceivingIQAsync(string filePath = "IQData.bin")
+    {
+        EnsureConnected();
+
+        byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
+        await _tcpCommunicationClient.SendAsync(command);
+
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        // ProcessResponse(response); // TODO
+        
+        _udpReceiver.StartReceiving(filePath);
+    }
+
+    public async Task StopReceivingIQAsync()
+    {
+        EnsureConnected();
+
+        byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
+        await _tcpCommunicationClient.SendAsync(command);
+
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        // ProcessResponse(response); // TODO
+
+
+        await _udpReceiver.StopReceivingAsync();
+    }
+
+    public async Task SetFrequencyAsync(ulong frequency, byte channelId)
+    {
+        EnsureConnected();
+
+        byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
+        await _tcpCommunicationClient.SendAsync(command);
+
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        // ProcessResponse(response); // TODO
+    }
+
+    private void EnsureConnected()
+    {
+        if (!_tcpCommunicationClient.IsConnected)
+            throw new TcpCommunicationException("Client is not connected.");
+    }
+}
