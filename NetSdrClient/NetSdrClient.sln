@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdrClient", "NetSdrClien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdrClient.ConsoleApp", "NetSdrClient.ConsoleApp\NetSdrClient.ConsoleApp.csproj", "{83A3F8D1-2D8B-4026-8C0D-CA83737E8A2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdtClient.Tests", "NetSdtClient.Tests\NetSdtClient.Tests.csproj", "{E1D55665-5B41-45D6-8150-5A85074F26B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{83A3F8D1-2D8B-4026-8C0D-CA83737E8A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83A3F8D1-2D8B-4026-8C0D-CA83737E8A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83A3F8D1-2D8B-4026-8C0D-CA83737E8A2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D55665-5B41-45D6-8150-5A85074F26B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D55665-5B41-45D6-8150-5A85074F26B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D55665-5B41-45D6-8150-5A85074F26B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D55665-5B41-45D6-8150-5A85074F26B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
