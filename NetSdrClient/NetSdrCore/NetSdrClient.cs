@@ -73,6 +73,12 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     private void ProcessResponse(byte[] response)
     {
+        if (response == null || response.Length == 0)
+        {
+            Console.WriteLine("Received an empty response from the receiver.");
+            return; 
+        }
+        
         if (response.Length == 2 && BitConverter.ToUInt16(response, 0) == (ushort)ResponseType.NAK)
         {
             throw new NakException();
