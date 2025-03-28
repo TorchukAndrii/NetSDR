@@ -1,4 +1,6 @@
-﻿using NetSdrCore;
+﻿using System.Net;
+using System.Net.Sockets;
+using NetSdrCore;
 
 Console.WriteLine("Starting NetSDR Console Client...");
 
@@ -12,6 +14,9 @@ using var client = new NetSdrClient(new TcpCommunicationClient(), new UdpReceive
 
 try
 {
+    var listener = new TcpListener(IPAddress.Parse(ip), 50000);
+    listener.Start();
+
     Console.WriteLine("Connecting to receiver...");
     await client.ConnectAsync(ip, port);
     Console.WriteLine("Connected!");
@@ -30,6 +35,7 @@ try
     Console.WriteLine("Disconnecting...");
     await client.DisconnectAsync();
     Console.WriteLine("Disconnected!");
+    listener.Stop();
 }
 catch (Exception ex)
 {

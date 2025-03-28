@@ -34,8 +34,8 @@ public class NetSdrClient : INetSdrClient, IDisposable
 
     public async Task DisconnectAsync()
     {
-        await _tcpCommunicationClient.DisconnectAsync();
         await StopReceivingIQAsync();
+        await _tcpCommunicationClient.DisconnectAsync();
     }
 
     public async Task StartReceivingIQAsync(string filePath = "IQData.bin")
@@ -43,7 +43,7 @@ public class NetSdrClient : INetSdrClient, IDisposable
         byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
         await _tcpCommunicationClient.SendAsync(command);
 
-        var response = await _tcpCommunicationClient.ReceiveAsync();
+        //var response = await _tcpCommunicationClient.ReceiveAsync();
         // ProcessResponse(response); // TODO
 
         _udpReceiver.StartReceiving(filePath);
@@ -54,7 +54,7 @@ public class NetSdrClient : INetSdrClient, IDisposable
         byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
         await _tcpCommunicationClient.SendAsync(command);
 
-        var response = await _tcpCommunicationClient.ReceiveAsync();
+        //var response = await _tcpCommunicationClient.ReceiveAsync();
         // ProcessResponse(response); // TODO
 
 
@@ -66,7 +66,7 @@ public class NetSdrClient : INetSdrClient, IDisposable
         byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
         await _tcpCommunicationClient.SendAsync(command);
 
-        var response = await _tcpCommunicationClient.ReceiveAsync();
+        //var response = await _tcpCommunicationClient.ReceiveAsync();
         // ProcessResponse(response); // TODO
     }
 }

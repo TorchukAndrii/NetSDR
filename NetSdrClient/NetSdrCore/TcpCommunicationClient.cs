@@ -116,7 +116,7 @@ public class TcpCommunicationClient : ITcpCommunicationClient
 
     private void EnsureConnected()
     {
-        if (IsConnected || _stream == null || !_stream.CanWrite)
+        if (IsConnected == false || _stream == null || _stream.CanWrite == false)
             throw new TcpCommunicationException("Client is not connected.");
     }
 }
