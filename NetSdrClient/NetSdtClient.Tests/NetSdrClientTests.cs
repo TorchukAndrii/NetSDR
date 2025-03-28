@@ -1,8 +1,9 @@
 using System.Net;
 using Moq;
-using NetSdrClient.Contracts;
+using NetSdrCore.Contracts;
+using NetSdrCore;
 
-namespace NetSdtClient.Tests;
+namespace NetSdtCore.Tests;
 
 public class NetSdrClientTests
 {
@@ -11,7 +12,7 @@ public class NetSdrClientTests
     {
         var tcpClientMock = new Mock<ITcpCommunicationClient>();
         var udpReceiverMock = new Mock<IUdpReceiver>();
-        var client = new NetSdrClient.NetSdrClient(tcpClientMock.Object, udpReceiverMock.Object);
+        var client = new NetSdrClient(tcpClientMock.Object, udpReceiverMock.Object);
 
         await client.ConnectAsync("127.0.0.1");
         tcpClientMock.Verify(c => c.ConnectAsync(It.IsAny<IPAddress>(), 50000), Times.Once);
@@ -22,7 +23,7 @@ public class NetSdrClientTests
     {
         var tcpClientMock = new Mock<ITcpCommunicationClient>();
         var udpReceiverMock = new Mock<IUdpReceiver>();
-        var client = new NetSdrClient.NetSdrClient(tcpClientMock.Object, udpReceiverMock.Object);
+        var client = new NetSdrClient(tcpClientMock.Object, udpReceiverMock.Object);
 
         await client.DisconnectAsync();
         tcpClientMock.Verify(c => c.DisconnectAsync(), Times.Once);

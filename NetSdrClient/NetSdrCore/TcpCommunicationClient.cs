@@ -1,10 +1,13 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using NetSdrClient.Contracts;
-using NetSdrClient.Exceptions;
-using NetSdrClient.Helpers;
+using NetSdrCore.Contracts;
+using NetSdrCore.Exceptions;
+using NetSdrCore.Helpers;
+using NetSdrCore.Contracts;
+using NetSdrCore.Exceptions;
+using NetSdrCore.Helpers;
 
-namespace NetSdrClient;
+namespace NetSdrCore;
 
 public class TcpCommunicationClient : ITcpCommunicationClient
 {

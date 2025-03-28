@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using NetSdrClient;
-using NetSdrClient.Exceptions;
+using NetSdrCore;
+using NetSdrCore.Exceptions;
 
-namespace NetSdtClient.Tests;
+namespace NetSdtCore.Tests;
 
 public class TcpCommunicationClientTests
 {

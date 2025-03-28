@@ -1,6 +1,6 @@
-﻿using NetSdrClient.CommandConfigurators.Enums;
+﻿using NetSdrCore.CommandConfigurators.Enums;
 
-namespace NetSdrClient.CommandConfigurators;
+namespace NetSdrCore.CommandConfigurators;
 
 public class FrequencyCommandConfigurator : BaseCommandConfigurator
 {

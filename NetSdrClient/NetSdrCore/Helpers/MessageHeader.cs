@@ -1,4 +1,4 @@
-﻿namespace NetSdrClient.Helpers;
+﻿namespace NetSdrCore.Helpers;
 
 public class MessageHeader
 {

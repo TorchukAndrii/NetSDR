@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NetSdrClient.Contracts;
+namespace NetSdrCore.Contracts;
 
 public interface ITcpCommunicationClient
 {

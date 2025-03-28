@@ -1,4 +1,4 @@
-﻿namespace NetSdrClient.CommandConfigurators.Enums;
+﻿namespace NetSdrCore.CommandConfigurators.Enums;
 
 public enum NetSdrCommandCode : ushort
 {

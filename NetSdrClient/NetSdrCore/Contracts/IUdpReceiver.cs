@@ -1,4 +1,4 @@
-﻿namespace NetSdrClient.Contracts;
+﻿namespace NetSdrCore.Contracts;
 
 public interface IUdpReceiver
 {

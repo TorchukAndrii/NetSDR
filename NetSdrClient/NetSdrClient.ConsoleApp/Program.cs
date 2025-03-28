@@ -1,4 +1,4 @@
-﻿using NetSdrClient;
+﻿using NetSdrCore;
 
 Console.WriteLine("Starting NetSDR Console Client...");
 
@@ -8,7 +8,7 @@ var outputFilePath = "IQData.bin";
 ulong frequency = 145000000; // Example frequency in Hz (145 MHz)
 byte channelId = 0;
 
-using var client = new NetSdrClient.NetSdrClient(new TcpCommunicationClient(), new UdpReceiver());
+using var client = new NetSdrClient(new TcpCommunicationClient(), new UdpReceiver());
 
 try
 {

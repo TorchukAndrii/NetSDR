@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using NetSdrClient.CommandConfigurators;
-using NetSdrClient.Contracts;
+using NetSdrCore.CommandConfigurators;
+using NetSdrCore.Contracts;
 
-namespace NetSdrClient;
+namespace NetSdrCore;
 
 public class NetSdrClient : INetSdrClient, IDisposable
 {

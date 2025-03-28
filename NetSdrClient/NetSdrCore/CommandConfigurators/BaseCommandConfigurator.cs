@@ -1,4 +1,4 @@
-﻿namespace NetSdrClient.CommandConfigurators;
+﻿namespace NetSdrCore.CommandConfigurators;
 
 public abstract class BaseCommandConfigurator
 {

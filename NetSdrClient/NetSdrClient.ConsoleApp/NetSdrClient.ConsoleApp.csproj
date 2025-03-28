@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\NetSdrClient\NetSdrClient.csproj"/>
+        <ProjectReference Include="..\NetSdrCore\NetSdrCore.csproj" />
     </ItemGroup>
 
 </Project>

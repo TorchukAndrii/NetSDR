@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdrClient", "NetSdrClient\NetSdrClient.csproj", "{AD910D3B-31D8-4C66-9BC7-BDC8012C0E10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdrCore", "NetSdrCore\NetSdrCore.csproj", "{AD910D3B-31D8-4C66-9BC7-BDC8012C0E10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetSdrClient.ConsoleApp", "NetSdrClient.ConsoleApp\NetSdrClient.ConsoleApp.csproj", "{83A3F8D1-2D8B-4026-8C0D-CA83737E8A2E}"
 EndProject

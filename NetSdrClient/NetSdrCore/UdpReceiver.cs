@@ -1,8 +1,8 @@
 ﻿using System.Net.Sockets;
 using System.Threading.Channels;
-using NetSdrClient.Contracts;
+using NetSdrCore.Contracts;
 
-namespace NetSdrClient;
+namespace NetSdrCore;
 
 public class UdpReceiver : IUdpReceiver, IDisposable
 {

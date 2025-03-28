@@ -1,4 +1,4 @@
-﻿namespace NetSdrClient.Exceptions;
+﻿namespace NetSdrCore.Exceptions;
 
 public class TcpCommunicationException : Exception
 {

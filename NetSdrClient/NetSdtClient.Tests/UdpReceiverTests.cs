@@ -1,8 +1,8 @@
 ﻿using System.Net.Sockets;
 using System.Text;
-using NetSdrClient;
+using NetSdrCore;
 
-namespace NetSdtClient.Tests;
+namespace NetSdtCore.Tests;
 
 public class UdpReceiverTests
 {
