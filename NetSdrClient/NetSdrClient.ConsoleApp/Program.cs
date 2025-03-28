@@ -2,7 +2,7 @@
 
 Console.WriteLine("Starting NetSDR Console Client...");
 
-var ip = "127.0.0.1"; // Change to your receiver's IP
+var ip = "127.0.0.1";
 var port = 50000;
 var outputFilePath = "IQData.bin";
 ulong frequency = 145000000; // Example frequency in Hz (145 MHz)
@@ -19,8 +19,6 @@ try
     Console.WriteLine("Starting IQ data reception...");
     await client.StartReceivingIQAsync(outputFilePath);
     Console.WriteLine($"Receiving IQ data. Writing to {outputFilePath}");
-
-    await Task.Delay(5000); // Simulating 5 seconds of data reception
 
     Console.WriteLine("Stopping IQ data reception...");
     await client.StopReceivingIQAsync();
