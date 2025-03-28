@@ -81,6 +81,11 @@ public class TcpCommunicationClient : ITcpCommunicationClient
     {
         EnsureConnected();
 
+        if (_stream.DataAvailable == false)
+        {
+            return Array.Empty<byte>();
+        }
+                
         var headerBytes = await ReadAsync(_stream!, HeaderSize);
         var header = MessageHeader.FromBytes(headerBytes);
         var payloadLength = header.Length - HeaderSize;
