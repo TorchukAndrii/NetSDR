@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using NetSdrCore.Enums;
 using NetSdrCore.CommandConfigurators;
 using NetSdrCore.Contracts;
+using NetSdrCore.Exceptions;
 
 namespace NetSdrCore;
 
@@ -43,20 +45,19 @@ public class NetSdrClient : INetSdrClient, IDisposable
         byte[] command = new ReceiverStateCommandConfigurator().SetStartCommand();
         await _tcpCommunicationClient.SendAsync(command);
 
-        //var response = await _tcpCommunicationClient.ReceiveAsync();
-        // ProcessResponse(response); // TODO
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        ProcessResponse(response);
 
         _udpReceiver.StartReceiving(filePath);
     }
-
+    
     public async Task StopReceivingIQAsync()
     {
         byte[] command = new ReceiverStateCommandConfigurator().SetStopCommand();
         await _tcpCommunicationClient.SendAsync(command);
-
-        //var response = await _tcpCommunicationClient.ReceiveAsync();
-        // ProcessResponse(response); // TODO
-
+        
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        ProcessResponse(response);
 
         await _udpReceiver.StopReceivingAsync();
     }
@@ -66,7 +67,27 @@ public class NetSdrClient : INetSdrClient, IDisposable
         byte[] command = new FrequencyCommandConfigurator().SetChannelId(channelId).SetFrequency(frequency);
         await _tcpCommunicationClient.SendAsync(command);
 
-        //var response = await _tcpCommunicationClient.ReceiveAsync();
-        // ProcessResponse(response); // TODO
+        var response = await _tcpCommunicationClient.ReceiveAsync();
+        ProcessResponse(response);
+    }
+
+    private void ProcessResponse(byte[] response)
+    {
+        if (response.Length == 2 && BitConverter.ToUInt16(response, 0) == (ushort)ResponseType.NAK)
+        {
+            throw new NakException();
+        }
+        
+        if (response.Length >= 3 && BitConverter.ToUInt16(response, 0) == (ushort)ResponseType.ACK)
+        {
+            Console.WriteLine($"Received ACK for Data Item {response[2]}");
+            return;
+        }
+
+        // Future support for Unsolicited Control Item messages
+        if (response.Length > 4) 
+        {
+            Console.WriteLine("Received Unsolicited Control Item - future processing needed");
+        }
     }
 }
