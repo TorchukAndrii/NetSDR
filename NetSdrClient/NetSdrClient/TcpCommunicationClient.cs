@@ -8,9 +8,9 @@ namespace NetSdrClient;
 
 public class TcpCommunicationClient : ITcpCommunicationClient
 {
+    private const int HeaderSize = 2;
     private readonly TcpClient _tcpClient;
     private NetworkStream? _stream;
-    private const int HeaderSize = 2;
 
     public TcpCommunicationClient()
     {
@@ -77,25 +77,26 @@ public class TcpCommunicationClient : ITcpCommunicationClient
     public async Task<byte[]> ReceiveAsync()
     {
         EnsureConnected();
-        
+
         var headerBytes = await ReadAsync(_stream!, HeaderSize);
         var header = MessageHeader.FromBytes(headerBytes);
-        int payloadLength = header.Length - HeaderSize;
+        var payloadLength = header.Length - HeaderSize;
 
-        byte[] payload = payloadLength > 0
+        var payload = payloadLength > 0
             ? await ReadAsync(_stream!, payloadLength)
             : Array.Empty<byte>();
 
         return CombineMessage(headerBytes, payload);
     }
-    
+
     private static byte[] CombineMessage(byte[] header, byte[] payload)
     {
-        byte[] fullMessage = new byte[header.Length + payload.Length];
+        var fullMessage = new byte[header.Length + payload.Length];
         Array.Copy(header, 0, fullMessage, 0, header.Length);
         Array.Copy(payload, 0, fullMessage, header.Length, payload.Length);
         return fullMessage;
     }
+
     private static async Task<byte[]> ReadAsync(NetworkStream stream, int count)
     {
         var buffer = new byte[count];
@@ -109,6 +110,7 @@ public class TcpCommunicationClient : ITcpCommunicationClient
 
         return buffer;
     }
+
     private void EnsureConnected()
     {
         if (IsConnected || _stream == null || !_stream.CanWrite)

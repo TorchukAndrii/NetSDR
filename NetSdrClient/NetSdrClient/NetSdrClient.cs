@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using NetSdrClient.CommandConfigurators;
 using NetSdrClient.Contracts;
-using NetSdrClient.Exceptions;
 
 namespace NetSdrClient;
 
@@ -70,6 +69,4 @@ public class NetSdrClient : INetSdrClient, IDisposable
         var response = await _tcpCommunicationClient.ReceiveAsync();
         // ProcessResponse(response); // TODO
     }
-
-
 }

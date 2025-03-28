@@ -14,7 +14,7 @@ public class TcpCommunicationClientTests
     {
         var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
-        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         listener.Stop();
         return port;
     }
@@ -22,7 +22,7 @@ public class TcpCommunicationClientTests
     [Fact]
     public async Task ConnectAsync_EstablishesConnection()
     {
-        int testPort = GetRandomPort();
+        var testPort = GetRandomPort();
         var listener = new TcpListener(IPAddress.Parse(Localhost), testPort);
         listener.Start();
 
@@ -37,7 +37,7 @@ public class TcpCommunicationClientTests
     [Fact]
     public async Task DisconnectAsync_ClosesConnection()
     {
-        int testPort = GetRandomPort();
+        var testPort = GetRandomPort();
         var listener = new TcpListener(IPAddress.Parse(Localhost), testPort);
         listener.Start();
 
@@ -54,7 +54,8 @@ public class TcpCommunicationClientTests
     public async Task SendAsync_ThrowsException_WhenNotConnected()
     {
         var client = new TcpCommunicationClient();
-        await Assert.ThrowsAsync<TcpCommunicationException>(async () => await client.SendAsync(Encoding.UTF8.GetBytes("Hello")));
+        await Assert.ThrowsAsync<TcpCommunicationException>(async () =>
+            await client.SendAsync(Encoding.UTF8.GetBytes("Hello")));
     }
 
     [Fact]

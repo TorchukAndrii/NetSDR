@@ -22,7 +22,7 @@ public class UdpReceiver : IUdpReceiver, IDisposable
     {
         if (_udpClient != null)
             throw new InvalidOperationException("UDP Receiver is already running.");
-        
+
         if (_cts.IsCancellationRequested)
         {
             _cts.Dispose();
