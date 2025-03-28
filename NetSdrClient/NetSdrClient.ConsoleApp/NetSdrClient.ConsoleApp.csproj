@@ -8,4 +8,8 @@
         <RootNamespace>NetSDR.ConsoleApp</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NetSdrClient\NetSdrClient.csproj" />
+    </ItemGroup>
+
 </Project>
